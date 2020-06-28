@@ -69,7 +69,7 @@ function PostBeginPlay ()
 static function FillPlayInfo(PlayInfo PlayInfo)
 {
 	Super.FillPlayInfo(PlayInfo);
-    PlayInfo.AddSetting("KFWhispColorChanger", "sColor", "Trader Path Color", 0, 0, "select", "0;@øøAqua;1;ø€@Orange;2;@ø@Green;3;@@øBlue;4;øø@Gold;5;ø@øPurple;6;White");
+    PlayInfo.AddSetting("KFWhispColorChanger", "sColor", "Trader Path Color", 0, 0, "select", "0;Aqua;1;Orange;2;Green;3;Blue;4;Gold;5;Purple;6;White");
 }
 
 static function string GetDescriptionText(string SettingName)
