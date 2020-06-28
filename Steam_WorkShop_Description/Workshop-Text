@@ -1,0 +1,43 @@
+This Mutator will your trader path color from the lame [b]Red[/b] to options like:
+
+- Cyan
+- Orange
+- Green
+- Blue
+- Gold
+- Purple
+- White
+
+[b][u]Features that might be added[/u][/b]
+
+- Random color `after` every wave
+- Random color with every `Whisp` ping in the same wave
+
+[b][u]Number Of Files[/u][/b]
+
+- 1
+
+[b][u]File Names[/u][/b]
+
+- \System\KFWhispColorChanger.u
+- \System\KFWhispColorChanger.ucl
+
+[b][u]Usage[/u][/b]
+
+1- Subscribe or download manually (recommended)
+2- Launch the game and wait to see 'Completed'
+3- Restart the game and you can see the mutators in your list
+
+[b][u]Class Names[/u][/b]
+
+- Spawn Mut: KFWhispColorChanger.KFWhispColorChanger
+
+[b][u]Known Bugs[/u][/b]
+
+You Tell Me.
+
+[b][u]Manual Download Links (Recommended)[/u][/b]
+
+You can find it under 'Not Whitelisted' folder named 'KF-KFWhispColorChanger'
+
+MEGA Link: https://mega DOT nz/folder/YDoEmKiC#s6FGAtgh40-TvB4bHsLaMQ
