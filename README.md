@@ -10,10 +10,11 @@ Change the color of trader's path from red to:
 - Purple
 - White
 
+or a random color every 0.5 seconds !
+
 ## Features to be added
 
-- Random color `after` every wave
-- Random color with every `Whisp` ping in the same wave
+- ~~Random color with every `Whisp` ping in the same wave~~ DONE
 
 ## Usage
 
