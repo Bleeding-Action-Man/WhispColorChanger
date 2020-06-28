@@ -124,7 +124,7 @@ static function string GetDescriptionText(string SettingName)
 		case "sColor":
 			return "Pick a color from this list";
         case "bRandomColor":
-			return "If enabled, path will be changed dynamically every few milliseconds to a second";
+			return "If enabled, path will be changed dynamically every 0.5 seconds | This ignores the 'Static Color' option!";
 		default:
 			return Super.GetDescriptionText(SettingName);
 	}
