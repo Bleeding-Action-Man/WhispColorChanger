@@ -7,105 +7,116 @@
 class KFWhispColorChanger extends Mutator Config(KFWhispColorChanger);
 
 //// Vars
-var color AquaColor, OrangeColor, GreenColor, BlueColor, GoldColor, PurpleColor, WhiteColor;
-var RedWhisp RW;
+var color AquaColor, OrangeColor, GreenColor, BlueColor, GoldColor, PurpleColor, WhiteColor, rand_c, rand_c_2;
 //// Config Vars
 var() config int sColor;
 var() config bool bRandomColor;
 
-simulated function PostBeginPlay ()
+replication
+{
+	unreliable if (Role == ROLE_Authority)
+		sColor, bRandomColor, AquaColor, OrangeColor, GreenColor, BlueColor, GoldColor, PurpleColor, WhiteColor, rand_c, rand_c_2;
+}
+
+function PostBeginPlay()
 {
     if (bRandomColor){
-        SetTimer(0.5, true);
+        Log("-----|| Random Color for Whisp ENABLED ||-----");
     }
     else{
-        SetTimer(0.1, true);
-    }
+        Log("-----|| Random Color for Whisp DISABLED ||-----");
+     }
+     SetTimer(1, true);
 }
 
 function Timer()
 {
-    AquaColor = default.AquaColor;
-    OrangeColor = default.OrangeColor;
-    GreenColor = default.GreenColor;
-    BlueColor = default.BlueColor;
-    GoldColor = default.GoldColor;
-    PurpleColor = default.PurpleColor;
-    WhiteColor = default.WhiteColor;
+    rand_c = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
+    rand_c_2 = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
+    AquaColor = class'Canvas'.static.MakeColor(0,255,255,255);
+    GreenColor = class'Canvas'.static.MakeColor(0,255,0,255);
+    BlueColor = class'Canvas'.static.MakeColor(0,0,255,255);
+    OrangeColor = class'Canvas'.static.MakeColor(255,109,5,255);
+    GoldColor = class'Canvas'.static.MakeColor(255,255,0,255);
+    PurpleColor = class'Canvas'.static.MakeColor(255,0,255,255);
+    WhiteColor = class'Canvas'.static.MakeColor(255,255,255,255);
+}
 
+simulated function PostNetReceive()
+{
+    local RedWhisp RW;
+    // Log("-----|| sColor: " $sColor$ " || bRandomColor: " $bRandomColor$ " ||-----");
     if (bRandomColor){
-        // Log("Random Color for Whisp ENABLED");
-        // Log("Chosen Whisp Color: " $sColor);
         foreach DynamicActors(class'KFMod.RedWhisp', RW)
         {
-	        RW.default.mColorRange[0] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
-	        RW.default.mColorRange[1] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
-            // Log("Whisp Color Changed");
+	        RW.default.mColorRange[0] = rand_c;
+	        RW.default.mColorRange[1] = rand_c_2;
         }
     }else{
         switch(sColor){
-        case 1:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  OrangeColor;
-		        RW.default.mColorRange[1] =  OrangeColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        case 2:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  GreenColor;
-		        RW.default.mColorRange[1] =  GreenColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        case 3:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  BlueColor;
-		        RW.default.mColorRange[1] =  BlueColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        case 4:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  GoldColor;
-		        RW.default.mColorRange[1] =  GoldColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        case 5:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  PurpleColor;
-		        RW.default.mColorRange[1] =  PurpleColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        case 6:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  WhiteColor;
-		        RW.default.mColorRange[1] =  WhiteColor;
-                // Log("Whisp Color Changed");
-            }
-            break;
-        default:
-            // Log("Chosen Whisp Color: " $sColor);
-            foreach DynamicActors(class'KFMod.RedWhisp', RW)
-	        {
-		        RW.default.mColorRange[0] =  OrangeColor;
-		        RW.default.mColorRange[1] =  OrangeColor;
-                // Log("Whisp Color Changed");
-            }
+            case 0:
+                // Log("-----|| Chosen Whisp Color: Aqua ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+	            {
+		            RW.default.mColorRange[0] =  AquaColor;
+		            RW.default.mColorRange[1] =  AquaColor;
+                }
+                break;
+            case 1:
+                // Log("-----|| Chosen Whisp Color: Orange ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  OrangeColor;
+                    RW.default.mColorRange[1] =  OrangeColor;
+                }
+                break;
+            case 2:
+                // Log("-----|| Chosen Whisp Color: Green ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  GreenColor;
+                    RW.default.mColorRange[1] =  GreenColor;
+                }
+                break;
+            case 3:
+                // Log("-----|| Chosen Whisp Color: Blue ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  BlueColor;
+                    RW.default.mColorRange[1] =  BlueColor;
+                }
+                break;
+            case 4:
+                // Log("-----|| Chosen Whisp Color: Gold ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  GoldColor;
+                    RW.default.mColorRange[1] =  GoldColor;
+                }
+                break;
+            case 5:
+                // Log("-----|| Chosen Whisp Color: Purple ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  PurpleColor;
+                    RW.default.mColorRange[1] =  PurpleColor;
+                }
+                break;
+            case 6:
+                // Log("-----|| Chosen Whisp Color: White ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  WhiteColor;
+                    RW.default.mColorRange[1] =  WhiteColor;
+                }
+                break;
+            default:
+                // Log("-----|| Chosen Whisp Color: Aqua ||-----");
+                foreach DynamicActors(class'KFMod.RedWhisp', RW)
+                {
+                    RW.default.mColorRange[0] =  AquaColor;
+                    RW.default.mColorRange[1] =  AquaColor;
+                }
         }
     }
 }
@@ -138,20 +149,12 @@ defaultproperties
     Description="Changes the color of the trader's path; - By Vel-San"
 
     // Mut Vars
-    // String for settings
 	sColor=0
     bRandomColor=false
-	// Colors of the Path
-    AquaColor=(R=0,G=255,B=255,A=255)
-    GreenColor=(R=0,G=255,B=0,A=255)
-    BlueColor=(R=0,G=0,B=255,A=255)
-    OrangeColor=(R=255,G=109,B=5,A=255)
-    GoldColor=(R=255,G=255,B=0,A=255)
-    PurpleColor=(R=255,G=0,B=255,A=255)
-    WhiteColor=(R=255,G=255,B=255,A=255)
 
     // Mandatory Vars
-	bAddToServerPackages=true
-    bAlwaysRelevant=true
-    RemoteRole=ROLE_SimulatedProxy
+	bAddToServerPackages=True
+    bAlwaysRelevant=True
+	RemoteRole=ROLE_SimulatedProxy
+    bNetNotify=true
 }
