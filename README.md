@@ -10,7 +10,7 @@ Change the color of trader's path from red to:
 - Purple
 - White
 
-or a random color every 0.5 seconds !
+or a random color every 1 second (e.g every wisp ping) !
 
 ## Features to be added
 
