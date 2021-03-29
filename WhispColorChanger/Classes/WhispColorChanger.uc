@@ -7,17 +7,26 @@
 class WhispColorChanger extends Mutator Config(WhispColorChanger);
 
 //// Config Vars
-var() config bool bDebug, bRandomColor, bIsWhispActive;
-var() config Color cWispColor;
+var() config bool bRandomColor;
+var() config Color cWhispColor;
 
 // Mut Vars
 var KFGameType KFGT;
 var WhispColorChanger Mut;
+var RedWhisp RW;
 
-function PostBeginPlay()
+var color tmpWhispColor;
+var bool tmpRandomColor;
+
+replication
 {
-  super.PostBeginPlay();
+	unreliable if (Role == ROLE_Authority)
+		                      tmpWhispColor,
+                          tmpRandomColor;
+}
 
+simulated function PostBeginPlay()
+{
   // Pointer To self, just in case needed
   Mut = self;
   default.Mut = self;
@@ -25,41 +34,33 @@ function PostBeginPlay()
 
   // Var init
   KFGT = KFGameType(Level.Game);
-  bIsWhispActive = false;
+  tmpWhispColor = cWhispColor;
+  tmpRandomColor = bRandomColor;
 
   // Basic Logging
-  MutLog("-----|| Chosen Color: " $cWispColor$ " || bRandomColor?: " $bRandomColor$ " ||-----");
+  MutLog("-----|| Chosen Color (RGBA): " $tmpWhispColor.R$ "-" $tmpWhispColor.G$ "-" $tmpWhispColor.B$ "-" $tmpWhispColor.A$ " || Random Color Enabled? " $tmpRandomColor$ " ||-----");
   if(KFGT == none) MutLog("-----|| KFGameType not found! ||-----");
 
   // Enable Tick
   Enable('Tick');
 }
 
-function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
-{
-  if(RedWhisp(Other)!=None)
-  {
-    MutLog("-----|| Red Whisp Class Detected ||-----");
-  }
-  return true;
-}
-
-/*
-function Tick(float dt)
+simulated function Tick(float dt)
 {
   if (!KFGT.bWaveInProgress && !KFGT.IsInState('PendingMatch') && !KFGT.IsInState('GameEnded'))
   {
-    if(!bIsWhispActive) ChangeWhispColor();
+    ChangeWhispColor();
   }
-  else
-  {
-    bIsWhispActive = false;
-  }
+}
 
-  local RedWhisp RW;
+// TODO: Need to find a way to replace foreach, and do the color change just once?
+simulated function ChangeWhispColor()
+{
+  // MutLog("-----|| Whisp Color Changer Spawned & Activated ||-----");
 
-  if (bRandomColor)
+  if (tmpRandomColor)
     {
+      // MutLog("-----|| Random-Colored Whisp is active ||-----");
       foreach DynamicActors(class'KFMod.RedWhisp', RW)
         {
           RW.default.mColorRange[0] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
@@ -68,15 +69,14 @@ function Tick(float dt)
     }
   else
     {
-      // MutLog("-----|| Chosen Whisp Color: Aqua ||-----");
+      // MutLog("-----|| Single-Colored Whisp is active ||-----");
       foreach DynamicActors(class'KFMod.RedWhisp', RW)
         {
-          RW.default.mColorRange[0] =  AquaColor;
-          RW.default.mColorRange[1] =  AquaColor;
+          RW.default.mColorRange[0] = tmpWhispColor;
+          RW.default.mColorRange[1] = tmpWhispColor;
         }
     }
 }
-*/
 
 function TimeStampLog(coerce string s)
 {
@@ -94,8 +94,13 @@ defaultproperties
   GroupName="KF-WhispColorChanger"
   FriendlyName="Whisp Color Changer - v3.1"
   Description="Changes the Color of Trader Path; - By Vel-San"
+	bAddToServerPackages=true
+  bNetNotify=true
+  RemoteRole=ROLE_SimulatedProxy
+	bAlwaysRelevant=true
 
   // Colors
+  /*
   AquaColor = (R=0,G=255,B=255,A=255)
   GreenColor = (R=0,G=255,B=0,A=255)
   BlueColor = (R=0,G=0,B=255,A=255)
@@ -103,4 +108,5 @@ defaultproperties
   GoldColor = (R=255,G=255,B=0,A=255)
   PurpleColor = (R=255,G=0,B=255,A=255)
   WhiteColor = (R=255,G=255,B=255,A=255)
+  */
 }
