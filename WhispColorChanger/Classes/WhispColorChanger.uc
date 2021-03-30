@@ -7,22 +7,33 @@
 class WhispColorChanger extends Mutator Config(WhispColorChanger);
 
 //// Config Vars
-var() config bool bRandomColor;
-var() config Color cWhispColor;
+var config bool bRandomColor;
+
+// Struct of Whisp Colors declared in Config File
+// TODO: Add More Varibales, when needed ;p
+struct WhispColors
+{
+  var config Color cWhispColorHead, cWhispColorTail;
+};
+
+// Colors Count
+const COLORS_COUNT = 2;
+
+// Colors List to be loaded from Config File
+var config WhispColors aColors[COLORS_COUNT];
 
 // Mut Vars
 var KFGameType KFGT;
 var WhispColorChanger Mut;
 var RedWhisp RW;
-
-var color tmpWhispColor;
+var WhispColors Colors[COLORS_COUNT];
 var bool tmpRandomColor;
 
 replication
 {
-	unreliable if (Role == ROLE_Authority)
-		                      tmpWhispColor,
-                          tmpRandomColor;
+  unreliable if (Role == ROLE_Authority)
+                aColors, Colors,
+                bRandomColor, tmpRandomColor;
 }
 
 simulated function PostBeginPlay()
@@ -34,15 +45,20 @@ simulated function PostBeginPlay()
 
   // Var init
   KFGT = KFGameType(Level.Game);
-  tmpWhispColor = cWhispColor;
   tmpRandomColor = bRandomColor;
 
   // Basic Logging
-  MutLog("-----|| Chosen Color (RGBA): " $tmpWhispColor.R$ "-" $tmpWhispColor.G$ "-" $tmpWhispColor.B$ "-" $tmpWhispColor.A$ " || Random Color Enabled? " $tmpRandomColor$ " ||-----");
+  MutLog("-----|| Random Whisp Color Enabled? " $tmpRandomColor$ " ||-----");
   if(KFGT == none) MutLog("-----|| KFGameType not found! ||-----");
 
-  // Enable Tick
+  // Enable Timer & Tick
+  SetTimer(1, false);
   Enable('Tick');
+}
+
+simulated function Timer()
+{
+  GetServerVars();
 }
 
 simulated function Tick(float dt)
@@ -59,23 +75,32 @@ simulated function ChangeWhispColor()
   // MutLog("-----|| Whisp Color Changer Spawned & Activated ||-----");
 
   if (tmpRandomColor)
+  {
+    // MutLog("-----|| Random-Colored Whisp is active ||-----");
+    foreach DynamicActors(class'KFMod.RedWhisp', RW)
     {
-      // MutLog("-----|| Random-Colored Whisp is active ||-----");
-      foreach DynamicActors(class'KFMod.RedWhisp', RW)
-        {
-          RW.default.mColorRange[0] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
-          RW.default.mColorRange[1] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
-        }
+      RW.default.mColorRange[0] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
+      RW.default.mColorRange[1] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
     }
+  }
   else
+  {
+    // MutLog("-----|| Single-Colored Whisp is active ||-----");
+    foreach DynamicActors(class'KFMod.RedWhisp', RW)
     {
-      // MutLog("-----|| Single-Colored Whisp is active ||-----");
-      foreach DynamicActors(class'KFMod.RedWhisp', RW)
-        {
-          RW.default.mColorRange[0] = tmpWhispColor;
-          RW.default.mColorRange[1] = tmpWhispColor;
-        }
+      RW.default.mColorRange[0] = Colors[0].cWhispColorHead;
+      RW.default.mColorRange[1] = Colors[0].cWhispColorTail;
     }
+  }
+}
+
+// Any new vars added to the array, will automatically be copied here
+simulated function GetServerVars()
+{
+  MutLog("-----|| Getting Colors from Server ||-----");
+  Colors[0] = aColors[0];
+  MutLog("-----|| Chosen cWhispColorHead Colors (RGBA): " $Colors[0].cWhispColorHead.R$ "-" $Colors[0].cWhispColorHead.G$ "-" $Colors[0].cWhispColorHead.B$ "-" $Colors[0].cWhispColorHead.A$ " ||-----");
+  MutLog("-----|| Chosen cWhispColorTail Colors (RGBA): " $Colors[0].cWhispColorTail.R$ "-" $Colors[0].cWhispColorTail.G$ "-" $Colors[0].cWhispColorTail.B$ "-" $Colors[0].cWhispColorTail.A$ " ||-----");
 }
 
 function TimeStampLog(coerce string s)
@@ -94,10 +119,10 @@ defaultproperties
   GroupName="KF-WhispColorChanger"
   FriendlyName="Whisp Color Changer - v3.1"
   Description="Changes the Color of Trader Path; - By Vel-San"
-	bAddToServerPackages=true
+  bAddToServerPackages=true
   bNetNotify=true
   RemoteRole=ROLE_SimulatedProxy
-	bAlwaysRelevant=true
+  bAlwaysRelevant=true
 
   // Colors
   /*
