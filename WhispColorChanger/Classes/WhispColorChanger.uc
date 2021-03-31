@@ -10,10 +10,11 @@ class WhispColorChanger extends Mutator Config(WhispColorChanger);
 var config bool bRandomColor;
 
 // Struct of Whisp Colors declared in Config File
-// TODO: Add More Varibales, when needed ;p
+// TODO: Add More Varibales, when needed ;p (And support for custom textures instead of smoke only)
 struct WhispColors
 {
   var config Color cWhispColorHead, cWhispColorTail;
+  var config int iHeadSize, iTailSize;
 };
 
 // Colors Count
@@ -81,6 +82,8 @@ simulated function ChangeWhispColor()
     {
       RW.default.mColorRange[0] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
       RW.default.mColorRange[1] = class'Canvas'.static.MakeColor(rand(255),rand(255),rand(255),255);
+      RW.default.mSizeRange[0] = Colors[0].iHeadSize;
+      RW.default.mSizeRange[1] = Colors[0].iTailSize;
     }
   }
   else
@@ -90,6 +93,8 @@ simulated function ChangeWhispColor()
     {
       RW.default.mColorRange[0] = Colors[0].cWhispColorHead;
       RW.default.mColorRange[1] = Colors[0].cWhispColorTail;
+      RW.default.mSizeRange[0] = Colors[0].iHeadSize;
+      RW.default.mSizeRange[1] = Colors[0].iTailSize;
     }
   }
 }
@@ -101,6 +106,8 @@ simulated function GetServerVars()
   Colors[0] = aColors[0];
   MutLog("-----|| Chosen cWhispColorHead Colors (RGBA): " $Colors[0].cWhispColorHead.R$ "-" $Colors[0].cWhispColorHead.G$ "-" $Colors[0].cWhispColorHead.B$ "-" $Colors[0].cWhispColorHead.A$ " ||-----");
   MutLog("-----|| Chosen cWhispColorTail Colors (RGBA): " $Colors[0].cWhispColorTail.R$ "-" $Colors[0].cWhispColorTail.G$ "-" $Colors[0].cWhispColorTail.B$ "-" $Colors[0].cWhispColorTail.A$ " ||-----");
+  MutLog("-----|| Chosen Head Size: " $Colors[0].iHeadSize$ " ||-----");
+  MutLog("-----|| Chosen Tail Size: " $Colors[0].iTailSize$ " ||-----");
 }
 
 function TimeStampLog(coerce string s)
@@ -123,15 +130,4 @@ defaultproperties
   bNetNotify=true
   RemoteRole=ROLE_SimulatedProxy
   bAlwaysRelevant=true
-
-  // Colors
-  /*
-  AquaColor = (R=0,G=255,B=255,A=255)
-  GreenColor = (R=0,G=255,B=0,A=255)
-  BlueColor = (R=0,G=0,B=255,A=255)
-  OrangeColor = (R=255,G=109,B=5,A=255)
-  GoldColor = (R=255,G=255,B=0,A=255)
-  PurpleColor = (R=255,G=0,B=255,A=255)
-  WhiteColor = (R=255,G=255,B=255,A=255)
-  */
 }
