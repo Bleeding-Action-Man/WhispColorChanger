@@ -31,7 +31,7 @@ This Mutator will your trader path color from the lame [b]Red[/b]
 [WhispColorChanger.WhispColorChanger]
 # Color as RGBA format
 # Make sure there is no 'Space' between each entry in the list
-aColors[0]=(cWhispColorHead=(R=0,G=255,B=255,A=255),cWhispColorTail=(R=255,G=0,B=255,A=255),iHeadSize=25,iTailSize=30)
+aColors[0]=(cWhispColorHead=(R=0,G=255,B=255,A=255),cWhispColorTail=(R=255,G=109,B=5,A=255),iHeadSize=25,iTailSize=30)
 # Generate a random color every second
 # This overrides your set colors in Colors
 bRandomColor=False
