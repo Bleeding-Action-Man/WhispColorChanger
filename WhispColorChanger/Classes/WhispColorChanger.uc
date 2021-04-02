@@ -52,17 +52,14 @@ simulated function PostBeginPlay()
   MutLog("-----|| Random Whisp Color Enabled? " $tmpRandomColor$ " ||-----");
   if(KFGT == none) MutLog("-----|| KFGameType not found! ||-----");
 
-  // Enable Timer & Tick
-  SetTimer(1, false);
-  Enable('Tick');
+  // Get server vars
+  GetServerVars();
+
+  // Enable Timer
+  SetTimer(0.5, true);
 }
 
 simulated function Timer()
-{
-  GetServerVars();
-}
-
-simulated function Tick(float dt)
 {
   if (!KFGT.bWaveInProgress && !KFGT.IsInState('PendingMatch') && !KFGT.IsInState('GameEnded'))
   {
@@ -124,7 +121,7 @@ defaultproperties
 {
   // Mut Info
   GroupName="KF-WhispColorChanger"
-  FriendlyName="Whisp Color Changer - v3.1"
+  FriendlyName="Whisp Color Changer - v3.2"
   Description="Changes the Color of Trader Path; - By Vel-San"
   bAddToServerPackages=true
   bNetNotify=true
