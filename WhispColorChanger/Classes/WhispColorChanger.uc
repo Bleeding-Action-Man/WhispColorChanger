@@ -29,42 +29,44 @@ var WhispColorChanger Mut;
 var RedWhisp RW;
 var WhispColors Colors[COLORS_COUNT];
 var bool tmpRandomColor;
+var bool bChangeColor;
 
 replication
 {
   unreliable if (Role == ROLE_Authority)
                 aColors, Colors,
-                bRandomColor, tmpRandomColor;
+                bRandomColor, tmpRandomColor,
+                bChangeColor;
 }
 
 simulated function PostBeginPlay()
 {
-  // Pointer To self, just in case needed
-  Mut = self;
-  default.Mut = self;
-  class'WhispColorChanger'.default.Mut = self;
-
-  // Var init
-  KFGT = KFGameType(Level.Game);
-  tmpRandomColor = bRandomColor;
+  if (Level.NetMode != NM_Client)
+  {
+    // Var init
+    KFGT = KFGameType(Level.Game);
+  }
 
   // Basic Logging
   MutLog("-----|| Random Whisp Color Enabled? " $tmpRandomColor$ " ||-----");
-  if(KFGT == none) MutLog("-----|| KFGameType not found! ||-----");
 
   // Get server vars
   GetServerVars();
 
   // Enable Timer
+  bChangeColor=false;
   SetTimer(0.5, true);
 }
 
 simulated function Timer()
 {
-  if (!KFGT.bWaveInProgress && !KFGT.IsInState('PendingMatch') && !KFGT.IsInState('GameEnded'))
+  if (Level.NetMode != NM_Client)
   {
-    ChangeWhispColor();
+    if (!KFGT.bWaveInProgress && !KFGT.IsInState('PendingMatch') && !KFGT.IsInState('GameEnded')) bChangeColor=true;
+    else bChangeColor=false;
   }
+
+  if(bChangeColor) ChangeWhispColor();
 }
 
 // TODO: Need to find a way to replace foreach, and do the color change just once?
@@ -121,7 +123,7 @@ defaultproperties
 {
   // Mut Info
   GroupName="KF-WhispColorChanger"
-  FriendlyName="Whisp Color Changer - v3.2"
+  FriendlyName="Whisp Color Changer - v3.2.1"
   Description="Changes the Color of Trader Path; - By Vel-San"
   bAddToServerPackages=true
   bNetNotify=true
