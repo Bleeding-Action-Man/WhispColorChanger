@@ -28,14 +28,13 @@ var KFGameType KFGT;
 var WhispColorChanger Mut;
 var RedWhisp RW;
 var WhispColors Colors[COLORS_COUNT];
-var bool tmpRandomColor;
 var bool bChangeColor;
 
 replication
 {
   unreliable if (Role == ROLE_Authority)
                 aColors, Colors,
-                bRandomColor, tmpRandomColor,
+                bRandomColor,
                 bChangeColor;
 }
 
@@ -48,7 +47,7 @@ simulated function PostBeginPlay()
   }
 
   // Basic Logging
-  MutLog("-----|| Random Whisp Color Enabled? " $tmpRandomColor$ " ||-----");
+  MutLog("-----|| Random Whisp Color Enabled? " $bRandomColor$ " ||-----");
 
   // Get server vars
   GetServerVars();
@@ -74,7 +73,7 @@ simulated function ChangeWhispColor()
 {
   // MutLog("-----|| Whisp Color Changer Spawned & Activated ||-----");
 
-  if (tmpRandomColor)
+  if (bRandomColor)
   {
     // MutLog("-----|| Random-Colored Whisp is active ||-----");
     foreach DynamicActors(class'KFMod.RedWhisp', RW)
