@@ -65,7 +65,11 @@ simulated function Timer()
     else bChangeColor=false;
   }
 
-  if(bChangeColor) ChangeWhispColor();
+  // Check later on if this eventually fixes the 'Slight' lag on wave start
+  if (Level.NetMode != NM_DedicatedServer)
+  {
+    if(bChangeColor) ChangeWhispColor();
+  }
 }
 
 // TODO: Need to find a way to replace foreach, and do the color change just once?
@@ -122,7 +126,7 @@ defaultproperties
 {
   // Mut Info
   GroupName="KF-WhispColorChanger"
-  FriendlyName="Whisp Color Changer - v3.2.1"
+  FriendlyName="Whisp Color Changer - v3.2.2"
   Description="Changes the Color of Trader Path; - By Vel-San"
   bAddToServerPackages=true
   bNetNotify=true
